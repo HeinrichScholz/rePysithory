@@ -1,6 +1,6 @@
 # googlesuggest.py v0.1
 #
-# November 11th, 2018
+# November 13th, 2018
 # <heinrich.scholz@protonmail.ch>
 # https://github.com/HeinrichScholz/rePysithory
 #
@@ -16,9 +16,15 @@ from urllib.parse import urlsplit
 from urllib.parse import urlencode
 import requests
 import json
+import argparse
+
+# Parsing CLI arguments
+parser		= argparse.ArgumentParser(description = "GoogleSuggest complete a ser of words with suggestions provided by suggestqueries.google.com")
+parser.add_argument("words", help = "set of words to be completed")
+args		= parser.parse_args()
 
 # Keyword submitted to suggestqueries.google.com
-keyword         = input()
+keyword         = args.words
 
 # URL components to be encoded as the target for GET request
 scheme          = "https"
@@ -31,6 +37,8 @@ fragment        = ""
 query           = urlencode(query)
 url             = urlunsplit((scheme, netloc, path, query, fragment))
 
-# Making the GET request
+# Processing the GET request (using "requests" package JSON decoder)
 json_data       = requests.get(url).json()
-print(json_data)
+for suggestion in json_data[1]:
+	print(suggestion)
+
